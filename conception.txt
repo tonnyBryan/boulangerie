@@ -1,0 +1,130 @@
+0. TypeProduit
+Identifiant (id_type_produit)
+designation
+
+0-1 TypeIngredient
+Identifiant (id_type_ingredient)
+designation
+
+0-2 unite
+Identifiant (id_type_ingredient)
+designation
+
+1. Produit
+Identifiant (id_produit)
+Nom du produit
+IdTypeProduit
+Prix unitaire
+Quantité en stock
+DureeVie (en jours) 
+
+1-1 FabricationProduit
+Identifiant (id_fabrication_produit)
+date action
+
+1-2 FabricationProduitFille
+Identifiant (id_fabrication_produit_fille)
+idFabricationproduit
+IdProduit
+Quantite fabriqué
+
+2. Ingrédient
+Identifiant (id_ingredient)
+Nom de l’ingrédient
+IdTypeIngredient
+Quantité en stock
+Prix unitaire
+IdUnite
+
+3. Recette
+Identifiant (id_recette)
+Produit concerné
+TempsPreparation
+
+3-1 RecetteFille
+Identifiant (id_recette_fille)
+IdRecette
+Ingrédient utilisé
+Quantité nécessaire de cet ingrédient
+
+4. Client
+Identifiant (id_client)
+Nom
+Contact
+
+5. VenteProduit
+Identifiant (id_vente)
+Client
+Date de vente
+Total (montant)
+
+5-1 DetailVenteProduit
+Identifiant (id_detail_vente)
+IdVenteProduit (vente concerné)
+Produit vendu
+Quantité vendue
+prix_unitaire
+
+6. AchatIngredient
+Identifiant (id_achat)
+Fournisseur
+Date d’achat
+Total (montant payé)
+
+6-1 DetailAchatIngredient
+Identifiant (id_achat_ingredient)
+IdAchatIngredient
+Ingrédient acheté
+Quantité achetée
+prix_unitaire
+
+7. Creance
+Identifiant (id_creance)
+Client concerné
+Montant dû
+Date d’échéance
+IdVenteProduit
+Statut (payée ou non)
+
+8. Fournisseur
+Identifiant (id_fournisseur)
+Nom
+Contact
+
+9. MvtStockProduit
+Identifiant (id_mvt_stock_produit)
+date_action
+idventeProduit (possible null car , la fabrication entraine aussi un mouvement de stock)
+idFabrication (possible null car , la vente entraine aussi un mouvement de stock)
+
+9-1 MvtStockProduitFille
+Identifiant (id_mvt_stock_produit_fille)
+IdMvtStockProduit
+entrée
+sortie
+nouveau_quantite
+IdProduit 
+date_expiration (null si entree = 0)
+
+10 MvtStockIngredient
+Identifiant (id_mvt_stock_ingredient)
+date_action
+
+10-1 MvtStockIngredientFille
+Identifiant (id_mvt_stock_ingredient_fille)
+IdMvtStockIngredient
+entrée
+sortie
+nouveau_quantite
+IdIngredient
+
+11 Global
+nom de la company
+caisse actuel
+
+11-1 MouvementCaisse
+Identifiant (id_mvt_caisse)
+entree 
+sortie
+date_action
+nouveau_caisse

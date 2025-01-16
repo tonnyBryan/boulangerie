@@ -1,6 +1,7 @@
 package com.boulangerie.servlet;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -161,6 +162,27 @@ public class ProduitServlet extends HttpServlet {
             request.getRequestDispatcher("/layout/produit/conseilmoisinsert.jsp").forward(request, response);
         } else if (type.equalsIgnoreCase("conseilmoisliste")) {
             request.getRequestDispatcher("/layout/produit/conseilmoisliste.jsp").forward(request, response);
+        }
+
+        else if (type.equalsIgnoreCase("client")) {
+            try (ProduitService service = new ProduitService()) {
+                List<VenteProduit> ventes = null;
+                if (request.getParameter("date") != null)
+                {
+                    Date date = Date.valueOf(request.getParameter("date"));
+                    ventes = service.getVentesByDate(date);
+                    request.setAttribute("dateInput", date);
+                } else {
+                    ventes = service.getVentesToday();
+                }
+                List<Client> clients = service.extractUniqueClients(ventes);
+                request.setAttribute("ventes", ventes);
+                request.setAttribute("clients", clients);
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", e.getMessage());
+            }
+            request.getRequestDispatcher("/layout/produit/client.jsp").forward(request, response);
         }
     }
 

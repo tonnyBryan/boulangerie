@@ -1,3 +1,5 @@
+src/main/java/com/boulangerie/dao/DataSource.java
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -41,6 +43,5 @@ src/main/webapp/assets/
 src/main/java/com/boulangerie/dao/
 **/DataSource.java
 src/main/java/com/boulangerie/dao/*
-src/main/java/com/boulangerie/dao/DataSource.java
 
 

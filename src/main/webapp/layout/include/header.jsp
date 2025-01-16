@@ -4,8 +4,11 @@
 <%@ page import="com.boulangerie.model.produit.*" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.boulangerie.model.client.*" %>
 <%@ page import="java.util.Calendar" %>
+<%@ page import="com.boulangerie.model.client.*" %>
+
+<%@ page import="com.boulangerie.service.*" %>
+
 
 <html>
 <head>
@@ -138,6 +141,11 @@
             <li>
                 <a href="<%= request.getContextPath() %>/produit?type=conseilmoisliste">
                     <i class="bi bi-circle"></i><span>Conseil du mois</span>
+                </a>
+            </li>
+            <li>
+                <a href="<%= request.getContextPath() %>/produit?type=client">
+                    <i class="bi bi-circle"></i><span>today Client</span>
                 </a>
             </li>
         </ul>

@@ -1,6 +1,7 @@
 package com.boulangerie.service;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 
 import com.boulangerie.model.produit.*;
@@ -424,5 +425,62 @@ public class ProduitService extends Service {
         }
         return result;
     }
+
+    public List<VenteProduit> getVentesToday() throws Exception {
+        List<VenteProduit> ventes = getVentes();
+        List<VenteProduit> todayVente = new ArrayList<>();
+
+        LocalDate today = LocalDate.now();
+        Date todayDate = Date.valueOf(today);
+
+        for (VenteProduit v : ventes) {
+            if (v.getDate_vente().equals(todayDate)) {
+                todayVente.add(v);
+            }
+        }
+
+        return todayVente;
+    }
+
+    public List<VenteProduit> getVentesByDate(Date targetDate) throws Exception {
+        List<VenteProduit> ventes = getVentes();
+        List<VenteProduit> filteredVentes = new ArrayList<>();
+
+        for (VenteProduit v : ventes) {
+            if (v.getDate_vente().equals(targetDate)) {
+                filteredVentes.add(v);
+            }
+        }
+
+        return filteredVentes;
+    }
+
+
+    public List<Client> extractUniqueClients(List<VenteProduit> ventes) {
+        List<Client> uniqueClients = new ArrayList<>();
+
+        for (VenteProduit vente : ventes) {
+            if (vente.getClient() != null) {
+                Client client = vente.getClient();
+                // Vérifier si le client est déjà dans la liste
+                if (!isClientAlreadyAdded(uniqueClients, client)) {
+                    uniqueClients.add(client); // Ajouter le client unique
+                }
+            }
+        }
+
+        return uniqueClients;
+    }
+
+    // Fonction auxiliaire pour vérifier si le client est déjà dans la liste
+    private boolean isClientAlreadyAdded(List<Client> clients, Client clientToCheck) {
+        for (Client client : clients) {
+            if (client.getId_client() == clientToCheck.getId_client()) { // Comparer les IDs des clients
+                return true; // Le client est déjà dans la liste
+            }
+        }
+        return false; // Le client n'est pas encore dans la liste
+    }
+
 
 }

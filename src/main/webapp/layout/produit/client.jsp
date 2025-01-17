@@ -34,7 +34,7 @@
                 </div>
 
                 <div class="d-flex">
-                    <button type="submit" class="btn btn-primary">Insert</button>
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
                 </div>
             </div>
         </div>

@@ -10,7 +10,7 @@ public class ConseilMois {
     @Primary(auto = true)
     private int id_conseil_mois;
     @FK(ProduitCpl.class)
-    @Col(name = "id_saveur_produit")
+    @Col("id_saveur_produit")
     private ProduitCpl produit;
     private Date date_debut;
     private Date date_fin;

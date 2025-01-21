@@ -10,6 +10,7 @@ import org.entityframework.tools.Primary;
 import com.boulangerie.model.ingredient.Ingredient;
 import com.boulangerie.model.ingredient.MvtStockIngredient;
 import com.boulangerie.model.ingredient.MvtStockIngredientFille;
+import org.entityframework.tools.Transient;
 
 public class MvtStockProduitFille {
     @Primary(auto = true)
@@ -22,7 +23,7 @@ public class MvtStockProduitFille {
     private Date date_expiration;
     @FK(SaveurProduit.class)
     private int id_saveur_produit;
-    @Col(isTransient = true)
+    @Transient
     private ProduitCpl produitCpl;
 
     public int getId_saveur_produit() {

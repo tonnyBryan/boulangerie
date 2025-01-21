@@ -4,13 +4,13 @@ import org.entityframework.tools.Col;
 import org.entityframework.tools.FK;
 import org.entityframework.tools.Table;
 
-@Table(name = "saveurproduit")
+@Table("saveurproduit")
 public class ProduitCpl extends SaveurProduit {
-    @Col(name = "id_produit")
+    @Col("id_produit")
     @FK(Produit.class)
     private Produit produit;
 
-    @Col(name = "id_recette")
+    @Col("id_recette")
     @FK(Recette.class)
     private Recette recette;
 

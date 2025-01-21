@@ -8,7 +8,7 @@ public class DetailAchatIngredient {
     private int id_achat_ingredient;
     @FK(AchatIngredient.class)
     private int id_achat;
-    @Col(name = "id_ingredient")
+    @Col("id_ingredient")
     @FK(Ingredient.class)
     private Ingredient ingredient;   
     private double quantite_achetee;

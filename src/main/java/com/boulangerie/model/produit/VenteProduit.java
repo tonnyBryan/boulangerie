@@ -13,7 +13,7 @@ import com.boulangerie.model.client.Client;
 public class VenteProduit {
     @Primary(auto = true)
     private int id_vente;
-    @Col(name = "id_client")
+    @Col("id_client")
     @FK(Client.class)
     private Client client;
     private Date date_vente;

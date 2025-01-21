@@ -3,7 +3,7 @@
     if (error != null) {
 %>
 <script>
-    createPopup("<%= error %>", 'alert');
+    createPopup('<%= error %>', 'alert');
 </script>
 <%
     }
@@ -14,7 +14,7 @@
     if (success != null) {
 %>
 <script>
-    createPopup("<%= success %>", 'success');
+    createPopup('<%= success %>', 'success');
 </script>
 <%
     }

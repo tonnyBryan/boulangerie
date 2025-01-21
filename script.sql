@@ -285,4 +285,15 @@ CREATE TRIGGER before_insert_conseilmois
     FOR EACH ROW
     EXECUTE PROCEDURE checkProduitDate();
 
-DROP TRIGGER IF EXISTS before_insert_conseilmois ON ConseilMois;
+-- DROP TRIGGER IF EXISTS before_insert_conseilmois ON ConseilMois;
+
+CREATE VIEW v_client_stat AS
+SELECT
+    c.id_client,
+    SUM(v.total) AS total
+FROM
+    Client c
+        LEFT JOIN
+    VenteProduit v ON c.id_client = v.id_client
+GROUP BY
+    c.id_client;

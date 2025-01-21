@@ -14,7 +14,7 @@ import com.boulangerie.model.annexe.Fournisseur;
 public class AchatIngredient {
     @Primary(auto = true)
     private int id_achat;
-    @Col(name = "id_fournisseur")
+    @Col("id_fournisseur")
     @FK(Fournisseur.class)
     private Fournisseur fournisseur;
     private Date date_achat;

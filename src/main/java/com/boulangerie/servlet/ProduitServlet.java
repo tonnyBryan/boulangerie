@@ -11,6 +11,7 @@ import java.util.Map;
 import com.boulangerie.model.client.Client;
 import com.boulangerie.model.ingredient.Ingredient;
 import com.boulangerie.model.produit.*;
+import com.boulangerie.model.view.V_Client_Stat;
 import com.boulangerie.service.ProduitService;
 import com.boulangerie.service.Service;
 
@@ -183,6 +184,23 @@ public class ProduitServlet extends HttpServlet {
                 request.setAttribute("error", e.getMessage());
             }
             request.getRequestDispatcher("/layout/produit/client.jsp").forward(request, response);
+        } else if (type.equalsIgnoreCase("clientstat")) {
+            try (ProduitService service = new ProduitService()) {
+                List<V_Client_Stat> stats = service.getClientStats();
+                request.setAttribute("stats", stats);
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", e.getMessage());
+            }
+            request.getRequestDispatcher("/layout/produit/clientstat.jsp").forward(request, response);
+        } else if (type.equalsIgnoreCase("template")) {
+            try (ProduitService service = new ProduitService()) {
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", e.getMessage());
+            }
+            request.getRequestDispatcher("/layout/produit/template.jsp").forward(request, response);
         }
     }
 

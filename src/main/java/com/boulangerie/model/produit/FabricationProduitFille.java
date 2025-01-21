@@ -15,7 +15,7 @@ public class FabricationProduitFille {
     @FK(FabricationProduit.class)
     private int id_fabrication_produit;
     private double quantite_fabrique;
-    @Col(name = "id_saveur_produit")
+    @Col("id_saveur_produit")
     @FK(ProduitCpl.class)
     private ProduitCpl produitCpl;
 

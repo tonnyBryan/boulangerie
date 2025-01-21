@@ -10,7 +10,7 @@ public class DetailVenteProduit {
     private int id_detail_vente;
     @FK(VenteProduit.class)
     private int id_vente;
-    @Col(name = "id_saveur_produit")
+    @Col("id_saveur_produit")
     @FK(ProduitCpl.class)
     private ProduitCpl produit_vendu;
     private double quantite_vendue;

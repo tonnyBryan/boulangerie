@@ -8,12 +8,12 @@ public class Ingredient {
     @Primary(auto = true)
     private int id_ingredient;
     private String nom_ingredient;
-    @Col(name = "id_type_ingredient")
+    @Col("id_type_ingredient")
     @FK(TypeIngredient.class)
     private TypeIngredient typeIngredient;  
     private double quantite_en_stock;
     private double prix_unitaire;
-    @Col(name = "id_unite")
+    @Col("id_unite")
     @FK(Unite.class)
     private Unite unite; 
 

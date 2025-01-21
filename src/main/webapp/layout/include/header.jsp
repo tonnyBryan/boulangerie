@@ -148,6 +148,11 @@
                     <i class="bi bi-circle"></i><span>today Client</span>
                 </a>
             </li>
+            <li>
+                <a href="<%= request.getContextPath() %>/produit?type=clientstat">
+                    <i class="bi bi-circle"></i><span>Client Stat</span>
+                </a>
+            </li>
         </ul>
       </li>
 

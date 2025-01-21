@@ -8,7 +8,7 @@ public class Produit {
     @Primary(auto = true)
     private int id_produit;
     private String nom_produit;
-    @Col(name = "id_type_produit")
+    @Col("id_type_produit")
     @FK(TypeProduit.class)
     private TypeProduit typeProduit;
     private double duree_vie;

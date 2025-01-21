@@ -11,7 +11,7 @@ public class RecetteFille {
     private int id_recette_fille;
     @FK(Recette.class)
     private int id_recette;  
-    @Col(name = "id_ingredient")
+    @Col("id_ingredient")
     @FK(Ingredient.class)
     private Ingredient ingredient;  
     private double quantite_necessaire;

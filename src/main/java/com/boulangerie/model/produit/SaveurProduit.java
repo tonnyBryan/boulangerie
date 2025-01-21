@@ -9,7 +9,7 @@ public class SaveurProduit {
     private int id_saveur_produit;
     @FK(Produit.class)
     private int id_produit;
-    @Col(name = "id_saveur")
+    @Col("id_saveur")
     @FK(Saveur.class)
     private Saveur saveur;
     @Col(zeroNull = true)

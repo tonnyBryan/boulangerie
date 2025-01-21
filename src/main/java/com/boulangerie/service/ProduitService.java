@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 import com.boulangerie.model.produit.*;
+import com.boulangerie.model.view.V_Client_Stat;
 import org.entityframework.web.P;
 
 import com.boulangerie.model.client.Client;
@@ -482,5 +483,8 @@ public class ProduitService extends Service {
         return false; // Le client n'est pas encore dans la liste
     }
 
+    public List<V_Client_Stat> getClientStats() throws Exception {
+        return getAll(V_Client_Stat.class);
+    }
 
 }

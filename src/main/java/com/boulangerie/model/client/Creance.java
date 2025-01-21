@@ -8,7 +8,7 @@ import org.entityframework.tools.FK;
 public class Creance {
     private int id_creance;
     @FK(Client.class)
-    @Col(name = "id_client")
+    @Col("id_client")
     private Client client;
     private double montant_du;
     private Date date_echeance;

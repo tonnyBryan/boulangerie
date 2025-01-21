@@ -3,6 +3,8 @@
 <%
     List<ProduitCpl> produits = (List<ProduitCpl>) request.getAttribute("produits");
     List<Client> clients = (List<Client>) request.getAttribute("clients");
+    List<Vendeur> vendeurs = (List<Vendeur>) request.getAttribute("vendeurs");
+
 %>
 
 <main id="main" class="main" style="position: relative; height: -webkit-fill-available;">
@@ -35,6 +37,21 @@
                             <% 
                                     }
                                 } 
+                            %>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="vendeurId" class="form-label">Vendeur : </label>
+                        <select class="form-select" id="vendeurId" name="vendeurId" required>
+                            <option value="" disabled selected>Choisir un vendeur</option>
+                            <%
+                                if (vendeurs != null) {
+                                    for (Vendeur vendeur : vendeurs) {
+                            %>
+                            <option value="<%= vendeur.getId_vendeur() %>"><%= vendeur.getNom() %></option>
+                            <%
+                                    }
+                                }
                             %>
                         </select>
                     </div>

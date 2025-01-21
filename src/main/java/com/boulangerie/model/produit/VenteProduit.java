@@ -3,6 +3,7 @@ package com.boulangerie.model.produit;
 import java.sql.Date;
 import java.util.List;
 
+import com.boulangerie.service.ProduitService;
 import org.entityframework.tools.Col;
 import org.entityframework.tools.FK;
 import org.entityframework.tools.OneToMany;
@@ -16,10 +17,21 @@ public class VenteProduit {
     @Col("id_client")
     @FK(Client.class)
     private Client client;
+    @FK(Vendeur.class)
+    @Col("id_vendeur")
+    private Vendeur vendeur;
     private Date date_vente;
     private double total;
     @OneToMany(DetailVenteProduit.class)
     private List<DetailVenteProduit> details;
+
+    public Vendeur getVendeur() {
+        return vendeur;
+    }
+
+    public void setVendeur(Vendeur vendeur) {
+        this.vendeur = vendeur;
+    }
 
     public List<DetailVenteProduit> getDetails() {
         return details;
@@ -59,5 +71,9 @@ public class VenteProduit {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public double getCommission() {
+        return ProduitService.calculatePercentage(5, getTotal());
     }
 }

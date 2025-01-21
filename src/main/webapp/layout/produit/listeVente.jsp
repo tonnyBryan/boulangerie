@@ -32,13 +32,19 @@
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse<%= idP %>" aria-expanded="false" aria-controls="flush-collapse<%= idP %>">
                             <div class="container-fluid">
                                 <div class="row text-center w-100">
-                                    <div class="col-md-4 col-12 text-start">
+                                    <div class="col-md-3 col-12 text-start">
                                         <strong>Client :</strong> <%= v.getClient().getNom() %>
                                     </div>
-                                    <div class="col-md-4 col-12 text-start">
+                                    <div class="col-md-3 col-12 text-start">
+                                        <strong>Vendeur :</strong> <%= v.getVendeur().getNom() %>
+                                    </div>
+                                    <div class="col-md-2 col-12 text-start">
                                         <strong>Total :</strong> <%= v.getTotal() %> Ar
                                     </div>
-                                    <div class="col-md-4 col-12 text-start">
+                                    <div class="col-md-2 col-12 text-start">
+                                        <strong>Comm :</strong> <%= Service.l3(v.getCommission()) %> Ar
+                                    </div>
+                                    <div class="col-md-2 col-12 text-start">
                                         <strong>Date :</strong> <%= v.getDate_vente() %>
                                     </div>
                                 </div>

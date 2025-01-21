@@ -21,6 +21,10 @@ public class Service implements AutoCloseable {
         }
     }
 
+    public static String l3(double value) {
+        return String.format("%.3f", value);
+    }
+
     public Service(GenericEntity ng) {
         this.ng = ng;    
     }

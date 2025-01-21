@@ -255,11 +255,12 @@ public class ProduitService extends Service {
         return getContext().findById(id, Client.class);
     }
 
-    public Object[] vendre(String[] produitIds, String[] quantites, Client client, String[] saveurIds) throws Exception {
+    public Object[] vendre(String[] produitIds, String[] quantites, Client client, String[] saveurIds, int idVendeur) throws Exception {
         VenteProduit vente = new VenteProduit();
         vente.setClient(client);
         vente.setDate_vente(new Date(System.currentTimeMillis()));
         vente.setTotal(0.0);
+        vente.setVendeur(getContext().findById(idVendeur, Vendeur.class));
 
         int idVente = (int) getContext().save(vente);
         vente.setId_vente(idVente);
@@ -320,11 +321,24 @@ public class ProduitService extends Service {
         if (success) {
             vente.setTotal(total);
             getContext().update(vente);
+
+            VendeurCommission vcomm = new VendeurCommission();
+            vcomm.setId_vendeur(idVendeur);
+            vcomm.setId_vente(vente.getId_vente());
+            vcomm.setDate_vente(vente.getDate_vente());
+            vcomm.setValue(calculatePercentage(5, total));
+
+            getContext().save(vcomm);
+
             return new Object[]{true, deduction};
         } else {
             getContext().rollBack();
             return new Object[]{false, recommandation};
         }
+    }
+
+    public static double calculatePercentage(double percentage, double value) {
+        return (percentage / 100) * value;
     }
 
     public List<VenteProduit> getVentes() throws Exception {
@@ -485,6 +499,15 @@ public class ProduitService extends Service {
 
     public List<V_Client_Stat> getClientStats() throws Exception {
         return getAll(V_Client_Stat.class);
+    }
+
+    public List<Vendeur> getVendeurs() throws Exception {
+        return getAll(Vendeur.class);
+    }
+
+    public List<VendeurStat> getVendeurCommissions(Date debut, Date fin) throws Exception {
+        String query = "SELECT * FROM get_vendeur_commissions(?, ?)";
+        return getContext().executeToList(VendeurStat.class, query, debut, fin);
     }
 
 }

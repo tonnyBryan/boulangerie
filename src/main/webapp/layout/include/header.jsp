@@ -153,6 +153,11 @@
                     <i class="bi bi-circle"></i><span>Client Stat</span>
                 </a>
             </li>
+            <li>
+                <a href="<%= request.getContextPath() %>/produit?type=ventecommission">
+                    <i class="bi bi-circle"></i><span>Vendeur Commission</span>
+                </a>
+            </li>
         </ul>
       </li>
 

@@ -81,6 +81,8 @@ public class ProduitServlet extends HttpServlet {
             try (ProduitService service = new ProduitService()) {
                 List<Client> clients = service.getClients();
                 List<ProduitCpl> produits = service.getAllProduitsCpl();
+                List<Vendeur> vendeurs = service.getVendeurs();
+                request.setAttribute("vendeurs", vendeurs);
                 request.setAttribute("produits", produits);
                 request.setAttribute("clients", clients);
             } catch (Exception e) {
@@ -193,6 +195,27 @@ public class ProduitServlet extends HttpServlet {
                 request.setAttribute("error", e.getMessage());
             }
             request.getRequestDispatcher("/layout/produit/clientstat.jsp").forward(request, response);
+        } else if (type.equalsIgnoreCase("ventecommission")) {
+            try (ProduitService service = new ProduitService()) {
+                String dateDebut = request.getParameter("date_debut");
+                String dateFin = request.getParameter("date_fin");
+
+                Date debut = Date.valueOf(dateDebut);
+                Date fin = Date.valueOf(dateFin);
+
+                if (fin.before(debut)) {
+                    throw new Exception("La date de début ne peut pas être inférieure à la date de fin.");
+                }
+
+                List<VendeurStat> stats = service.getVendeurCommissions(debut, fin);
+                request.setAttribute("debut", dateDebut);
+                request.setAttribute("fin", dateFin);
+                request.setAttribute("stats", stats);
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", e.getMessage());
+            }
+            request.getRequestDispatcher("/layout/produit/ventecommission.jsp").forward(request, response);
         } else if (type.equalsIgnoreCase("template")) {
             try (ProduitService service = new ProduitService()) {
 
@@ -282,12 +305,13 @@ public class ProduitServlet extends HttpServlet {
             String[] produitIds = request.getParameterValues("produitId[]");
             String[] saveurIds = request.getParameterValues("saveurs[]"); // Récupération des saveurs sélectionnées
 
+            String idVendeur = request.getParameter("vendeurId");
             String idClient = request.getParameter("clientId");
             try (ProduitService service = new ProduitService()) {
                 service.beginTransaction();
 
                 Client client = service.getClient(Integer.parseInt(idClient));
-                Object[] retour = service.vendre(produitIds, quantites, client, saveurIds);
+                Object[] retour = service.vendre(produitIds, quantites, client, saveurIds, Integer.parseInt(idVendeur));
 
                 if ((boolean) retour[0] == true) {
                     request.setAttribute("titre", "Vente de Produit réussi");

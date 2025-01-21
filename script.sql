@@ -123,6 +123,7 @@ CREATE TABLE VenteProduit (
     id_vente SERIAL PRIMARY KEY,
     id_client INT NOT NULL,
     date_vente DATE NOT NULL,
+    id_vendeur INT REFERENCES Vendeur(id_vendeur),
     total NUMERIC NOT NULL,
     FOREIGN KEY (id_client) REFERENCES Client(id_client)
 );
@@ -297,3 +298,40 @@ FROM
     VenteProduit v ON c.id_client = v.id_client
 GROUP BY
     c.id_client;
+
+CREATE TABLE Vendeur (
+     id_vendeur SERIAL PRIMARY KEY,
+     nom VARCHAR(50) NOT NULL
+);
+
+INSERT INTO Vendeur (nom) values ('Vendeur A');
+INSERT INTO Vendeur (nom) values ('Vendeur B');
+
+
+CREATE TABLE VendeurCommission (
+   id_vendeur_commission SERIAL PRIMARY KEY,
+   id_vendeur INT REFERENCES Vendeur(id_vendeur),
+   id_vente INT REFERENCES VenteProduit(id_vente),
+   value NUMERIC NOT NULL,
+   date_vente DATE NOT NULL
+);
+
+CREATE OR REPLACE FUNCTION get_vendeur_commissions(start_date DATE, end_date DATE)
+    RETURNS TABLE (id_vendeur INT, total_value NUMERIC) AS $$
+BEGIN
+    RETURN QUERY
+        SELECT
+            v.id_vendeur,
+            COALESCE(SUM(vc.value), 0) AS total_value
+        FROM
+            Vendeur v
+                LEFT JOIN
+            VendeurCommission vc
+            ON v.id_vendeur = vc.id_vendeur
+                AND vc.date_vente BETWEEN start_date AND end_date
+        GROUP BY
+            v.id_vendeur
+        ORDER BY
+            v.id_vendeur;
+END;
+$$ LANGUAGE plpgsql;

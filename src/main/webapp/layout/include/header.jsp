@@ -158,6 +158,16 @@
                     <i class="bi bi-circle"></i><span>Vendeur Commission</span>
                 </a>
             </li>
+            <li>
+                <a href="<%= request.getContextPath() %>/produit?type=prix">
+                    <i class="bi bi-circle"></i><span>Changer prix</span>
+                </a>
+            </li>
+            <li>
+                <a href="<%= request.getContextPath() %>/produit?type=changementprix">
+                    <i class="bi bi-circle"></i><span>Histo changement</span>
+                </a>
+            </li>
         </ul>
       </li>
 

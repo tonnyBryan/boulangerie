@@ -3,6 +3,7 @@ delete from mvtstockproduitfille;
 delete from mvtstockproduit;
 delete from fabricationproduit;
 delete from detailventeproduit;
+delete from vendeurcommission;
 delete from venteproduit;
 delete from saveurproduit;
 delete from produit;

@@ -78,7 +78,7 @@
                                         <td><%= produit.getPrix_unitaire() %></td>
                                         <td><%= produit.getQuantite_en_stock() %> <%= stock %></td>
                                         <td>
-                                            <input type="number" class="form-control" name="quantites[]" placeholder="Quantit&eacute;" value="0" required> 
+                                            <input type="number" min="0" max="<%= produit.getQuantite_en_stock() %>" class="form-control" name="quantites[]" placeholder="Quantit&eacute;" value="0" required>
                                             <input type="hidden" name="produitId[]" value="<%= produit.getId_saveur_produit() %>"> <!-- ID du produit -->
                                         </td>
                                     </tr>
@@ -88,6 +88,9 @@
                                 %>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="d-flex  mb-2">
+                        <h5>Total : <strong><span id="total-price">0</span></strong></h5>
                     </div>
                     <div class="d-flex">
                         <button type="submit" class="btn btn-primary">Vendre</button>
@@ -100,4 +103,38 @@
 
 
 </main>
+
+<script>
+    // Fonction pour calculer et afficher le total
+    function calculateTotal() {
+        let totalPrice = 0;
+
+        // Récupérer tous les champs d'entrée de quantité
+        const rows = document.querySelectorAll("tbody tr");
+        rows.forEach(row => {
+            const priceElement = row.querySelector("td:nth-child(2)"); // Prix unitaire
+            const quantityInput = row.querySelector("input[type='number']"); // Quantité
+
+            const unitPrice = parseFloat(priceElement.textContent.trim()); // Prix unitaire
+            const quantity = parseInt(quantityInput.value.trim(), 10); // Quantité saisie
+
+            if (!isNaN(unitPrice) && !isNaN(quantity)) {
+                totalPrice += unitPrice * quantity; // Ajouter au total
+            }
+        });
+
+        // Afficher le total dans l'élément avec l'ID total-price
+        document.getElementById("total-price").textContent = totalPrice.toFixed(2);
+    }
+
+    // Ajouter des écouteurs d'événements sur chaque champ de quantité
+    document.querySelectorAll("input[name='quantites[]']").forEach(input => {
+        input.addEventListener("input", calculateTotal); // Met à jour le total lors d'une saisie
+    });
+
+    // Calculer le total initial (au cas où il y a des valeurs par défaut)
+    calculateTotal();
+</script>
+
+
 <%@ include file="/layout/include/footer.jsp" %>

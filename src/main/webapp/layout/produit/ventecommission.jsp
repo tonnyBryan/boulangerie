@@ -1,4 +1,5 @@
 <%@ page import="com.boulangerie.model.view.V_Client_Stat" %>
+<%@ page import="com.boulangerie.model.view.V_Comm_Genre" %>
 <%@include file="/layout/include/header.jsp" %>
 
 <main id="main" class="main" style="position: relative; height: -webkit-fill-available;">
@@ -49,10 +50,9 @@
     %>
 
     <div class="card">
-        <div class="card-header">
-            <h4 class="mb-0">Liste des commissions par vendeurs entre <strong><%= request.getAttribute("debut") %></strong> et <strong><%= request.getAttribute("fin") %></strong></h4>
-        </div>
         <div class="card-body">
+            <h5 class="card-title">Liste des commissions par vendeurs entre <strong><%= request.getAttribute("debut") %></strong> et <strong><%= request.getAttribute("fin") %></strong></h5>
+
             <div class="table-responsive">
                 <table class="table">
                     <thead>
@@ -68,7 +68,7 @@
                     %>
                     <tr>
                         <td>
-                            <%= vendeur.getNom() %>
+                            <%= vendeur.getNom() %> (<%= vendeur.getGenre().getDesignation() %>)
                         </td>
                         <td>
                             <%= stat.getTotal_value() %>
@@ -78,6 +78,42 @@
                     <%
                         }
                     %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <%
+        }
+    %>
+
+    <%
+        V_Comm_Genre comm = (V_Comm_Genre) request.getAttribute("commgenre");
+        if (comm != null) {
+    %>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Total des commissions par genre entre <strong><%= request.getAttribute("debut") %></strong> et <strong><%= request.getAttribute("fin") %></strong></h5>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Total Homme</th>
+                        <th>Total Femme</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <%= comm.getHomme() %>
+                        </td>
+                        <td>
+                            <%= comm.getFemme() %>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

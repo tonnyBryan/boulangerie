@@ -12,6 +12,8 @@ import com.boulangerie.model.client.Client;
 import com.boulangerie.model.ingredient.Ingredient;
 import com.boulangerie.model.produit.*;
 import com.boulangerie.model.view.V_Client_Stat;
+import com.boulangerie.model.view.V_Comm_Genre;
+import com.boulangerie.service.Constante;
 import com.boulangerie.service.ProduitService;
 import com.boulangerie.service.Service;
 
@@ -208,15 +210,48 @@ public class ProduitServlet extends HttpServlet {
                 }
 
                 List<VendeurStat> stats = service.getVendeurCommissions(debut, fin);
+                V_Comm_Genre co = service.getVendeurCommissionParGenre(debut, fin);
                 request.setAttribute("debut", dateDebut);
                 request.setAttribute("fin", dateFin);
+                request.setAttribute("commgenre", co);
                 request.setAttribute("stats", stats);
             } catch (Exception e) {
                 e.printStackTrace();
                 request.setAttribute("error", e.getMessage());
             }
             request.getRequestDispatcher("/layout/produit/ventecommission.jsp").forward(request, response);
-        } else if (type.equalsIgnoreCase("template")) {
+        }else if (type.equalsIgnoreCase("prix")) {
+            try (ProduitService service = new ProduitService()) {
+                List<ProduitCpl> cpls = service.getAllProduitsCpl();
+                request.setAttribute("produits", cpls);
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", e.getMessage());
+            }
+            request.getRequestDispatcher("/layout/produit/prix.jsp").forward(request, response);
+        }
+        else if (type.equalsIgnoreCase("changementprix")) {
+            try (ProduitService service = new ProduitService()) {
+                String idP = request.getParameter("id_produit");
+
+                List<ProduitCpl> ps = service.getAllProduitsCpl();
+                List<ChangementPrix> cps = null;
+
+                if (idP != null) {
+                    cps = service.listeChangement(Integer.parseInt(idP));
+                } else {
+                    cps = service.listeChangement();
+                }
+
+                request.setAttribute("produits", ps);
+                request.setAttribute("changements", cps);
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", e.getMessage());
+            }
+            request.getRequestDispatcher("/layout/produit/changementprix.jsp").forward(request, response);
+        }
+        else if (type.equalsIgnoreCase("template")) {
             try (ProduitService service = new ProduitService()) {
 
             } catch (Exception e) {
@@ -316,6 +351,14 @@ public class ProduitServlet extends HttpServlet {
                 if ((boolean) retour[0] == true) {
                     request.setAttribute("titre", "Vente de Produit réussi");
                     String decList = service.buildDeductionProduitList((HashMap<Integer, Double>) retour[1]);
+                    decList += "<br> <p> Total vente = <strong>" + retour[2] + "</strong></p>";
+
+                    if ((double) retour[2] < Constante.MIN_VENTE_COMMISSION) {
+                        decList += "(tsy mahazo commission ilay vendeur)";
+                    } else {
+                        decList += "(mahazo commission ilay vendeur)";
+                    }
+
                     request.setAttribute("success", decList);
 
                     service.commit();
@@ -481,6 +524,31 @@ public class ProduitServlet extends HttpServlet {
                 e.printStackTrace();
                 request.setAttribute("error", e.getMessage());
             }
+        }
+        else if (type.equalsIgnoreCase("prix")) {
+            request.setAttribute("titre" , "changement Prix Produit");
+            try (ProduitService service = new ProduitService()) {
+                String id_produit = request.getParameter("id_produit");
+                String prix = request.getParameter("prix");
+                String date = request.getParameter("date");
+
+                double p = Double.parseDouble(prix);
+                Date t = Date.valueOf(date);
+                int idP = Integer.parseInt(id_produit);
+
+                service.beginTransaction();
+
+                service.changePrixProduit(idP, p, t);
+
+                service.endTransaction();
+                service.commit();
+
+                request.setAttribute("success", "changement affectuee");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", e.getMessage());
+            }
+            request.getRequestDispatcher("/layout/result.jsp").forward(request, response);
         }
     }
 }

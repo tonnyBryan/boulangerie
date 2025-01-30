@@ -92,6 +92,14 @@ create table saveurProduit(
     FOREIGN KEY (id_recette) REFERENCES Recette(id_recette)
 );
 
+CREATE TABLE ChangementPrix (
+    id_changement_prix SERIAL PRIMARY KEY,
+    oldPrix numeric not null,
+    newPrix numeric not null,
+    id_saveur_produit int references saveurProduit(id_saveur_produit),
+    date_changement date
+);
+
 -- 1-1. FabricationProduit
 CREATE TABLE FabricationProduit (
     id_fabrication_produit SERIAL PRIMARY KEY,
@@ -115,7 +123,7 @@ CREATE TABLE Client (
     contact VARCHAR(255) NOT NULL
 );
 
-INSERT INTO client (nom, contact) VALUES ('divers', 'divers');
+INSERT INTO client (nom, contact) VALUES ('Anjara', '123456789');
 INSERT INTO client (nom, contact) VALUES ('Tonny', '0341456141');
 
 -- 5. VenteProduit
@@ -138,6 +146,8 @@ CREATE TABLE DetailVenteProduit (
     FOREIGN KEY (id_vente) REFERENCES VenteProduit(id_vente),
     FOREIGN KEY (id_saveur_produit) REFERENCES saveurProduit(id_saveur_produit)
 );
+
+
 
 -- 8. Fournisseur
 CREATE TABLE Fournisseur (
@@ -299,9 +309,19 @@ FROM
 GROUP BY
     c.id_client;
 
+CREATE TABLE Genre (
+    id_genre SERIAL PRIMARY KEY ,
+    designation VARCHAR(50) NOT NULL
+);
+
+INSERT INTO Genre (designation) values ('Homme');
+INSERT INTO Genre (designation) values ('Femme');
+
+
 CREATE TABLE Vendeur (
      id_vendeur SERIAL PRIMARY KEY,
-     nom VARCHAR(50) NOT NULL
+     nom VARCHAR(50) NOT NULL,
+     id_genre INT REFERENCES Genre(id_genre)
 );
 
 INSERT INTO Vendeur (nom) values ('Vendeur A');
@@ -335,3 +355,26 @@ BEGIN
             v.id_vendeur;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION calculer_somme_par_genre(date_debut DATE, date_fin DATE)
+RETURNS TABLE (
+    homme NUMERIC,
+    femme NUMERIC
+) AS $$
+BEGIN
+RETURN QUERY
+SELECT
+    SUM(CASE WHEN g.id_genre = 1 THEN vc.value ELSE 0 END) AS homme,
+    SUM(CASE WHEN g.id_genre = 2 THEN vc.value ELSE 0 END) AS femme
+FROM
+    VendeurCommission vc
+        JOIN
+    Vendeur v ON vc.id_vendeur = v.id_vendeur
+        JOIN
+    Genre g ON v.id_genre = g.id_genre
+WHERE
+    vc.date_vente BETWEEN date_debut AND date_fin;
+END;
+$$ LANGUAGE plpgsql;
+
+

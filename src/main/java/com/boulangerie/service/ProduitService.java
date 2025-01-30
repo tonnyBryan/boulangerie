@@ -6,6 +6,8 @@ import java.util.*;
 
 import com.boulangerie.model.produit.*;
 import com.boulangerie.model.view.V_Client_Stat;
+import com.boulangerie.model.view.V_Comm_Genre;
+import org.entityframework.client.GenericEntity;
 import org.entityframework.web.P;
 
 import com.boulangerie.model.client.Client;
@@ -326,11 +328,15 @@ public class ProduitService extends Service {
             vcomm.setId_vendeur(idVendeur);
             vcomm.setId_vente(vente.getId_vente());
             vcomm.setDate_vente(vente.getDate_vente());
-            vcomm.setValue(calculatePercentage(5, total));
+            vcomm.setValue(calculatePercentage(Constante.COMMISSION, total));
 
+            if (vente.getTotal() < Constante.MIN_VENTE_COMMISSION) {
+                System.out.println("TSY NAHAZO COMISSION SATRY TOTAL VENTE = " + vente.getTotal());
+                vcomm.setValue(0.0);
+            }
             getContext().save(vcomm);
 
-            return new Object[]{true, deduction};
+            return new Object[]{true, deduction, vente.getTotal()};
         } else {
             getContext().rollBack();
             return new Object[]{false, recommandation};
@@ -510,4 +516,44 @@ public class ProduitService extends Service {
         return getContext().executeToList(VendeurStat.class, query, debut, fin);
     }
 
+    public V_Comm_Genre getVendeurCommissionParGenre(Date debut, Date fin) throws Exception {
+        String query = "SELECT * FROM get_vendeur_commissions(?, ?)";
+        return GenericEntity.first(getContext().executeToList(V_Comm_Genre.class, "SELECT * FROM calculer_somme_par_genre(?, ?)", debut, fin));
+    }
+
+    public void changePrixProduit(int idProduit , double newPrix , Date date) throws Exception {
+        SaveurProduit sp = getContext().findById(idProduit, SaveurProduit.class);
+        double oldPrix = sp.getPrix_unitaire();
+
+        if (oldPrix == newPrix) {
+            throw new Exception("Mitovy @le taloh ihany!! : " + oldPrix);
+        }
+
+        sp.setPrix_unitaire(newPrix);
+
+        ChangementPrix last = getContext().firstOrNull(ChangementPrix.class, "id_saveur_produit = ?  order by id_changement_prix desc", idProduit);
+
+        if (last != null) {
+            if (date.before(last.getDate_changement())) {
+                throw new Exception("La date fournie ne peut pas être antérieure à la dernière date enregistrée (" + last.getDate_changement() + ") pour cette produit.");
+            }
+        }
+
+        ChangementPrix cp = new ChangementPrix();
+        cp.setNewPrix(newPrix);
+        cp.setOldPrix(oldPrix);
+        cp.setProduitCpl(getContext().findById(sp.getId_saveur_produit(), ProduitCpl.class));
+        cp.setDate_changement(date);
+
+        getContext().save(cp);
+        getContext().update(sp);
+    }
+
+    public List<ChangementPrix> listeChangement(int idProduit) throws Exception {
+        return getContext().findWhereArgs(ChangementPrix.class, "id_saveur_produit = ? order by id_changement_prix desc", idProduit);
+    }
+
+    public List<ChangementPrix> listeChangement() throws Exception {
+        return getContext().findWhen(ChangementPrix.class, "order by id_changement_prix desc");
+    }
 }

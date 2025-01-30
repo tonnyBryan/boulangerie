@@ -42,9 +42,6 @@
                                         <strong>Total :</strong> <%= v.getTotal() %> Ar
                                     </div>
                                     <div class="col-md-2 col-12 text-start">
-                                        <strong>Comm :</strong> <%= Service.l3(v.getCommission()) %> Ar
-                                    </div>
-                                    <div class="col-md-2 col-12 text-start">
                                         <strong>Date :</strong> <%= v.getDate_vente() %>
                                     </div>
                                 </div>
